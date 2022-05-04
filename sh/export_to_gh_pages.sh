@@ -20,6 +20,8 @@ print_message "version $CURRENT_VERSION"
 
 git checkout gh-pages || git checkout -b gh-pages || exit "$?"
 
+[ ! -d $RELEASE_DIR ]
+
 print_message "running git rm -rf on directory (to avoid merge conflicts)"
 git rm -rf . || exit "$?"
 
@@ -29,14 +31,12 @@ if $GITIGNORE; then
 fi
 RELEASE_DIR=releases
 
-print_message "recovering releases"
-git checkout HEAD -- $RELEASE_DIR || exit "$?"
+print_message "recovering releases or creating releases directory if first release"
+git checkout HEAD -- $RELEASE_DIR || mkdir $RELEASE_DIR || exit "$?"
 
 print_message "applying stash"
 git stash pop || exit "$?"
 
-print_message "creating release directory"
-[ ! -d $RELEASE_DIR ] && mkdir $RELEASE_DIR
 
 DEST_DIR=$RELEASE_DIR/$CURRENT_VERSION
 [ ! -d $DEST_DIR ] && mkdir $DEST_DIR
@@ -49,7 +49,7 @@ cd $RELEASE_DIR
 cat > index.html <<'EOF'
   <html>
   <head>
-    <title>Jamear2 Releases</title>
+    <title>Releases</title>
   </head>
   <body>
     <h1>Releases</h1>
