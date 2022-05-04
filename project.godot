@@ -62,8 +62,28 @@ _global_script_class_icons={
 
 [application]
 
-config/name="skel"
+config/name="rgberse"
+run/main_scene="res://src/levels/level0.tscn"
 config/icon="res://assets/texture/icon.png"
+
+[input]
+
+jump={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":90,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+transform={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":88,"physical_scancode":0,"unicode":0,"echo":false,"script":null)
+ ]
+}
+
+[layer_names]
+
+2d_physics/layer_1="red"
+2d_physics/layer_2="green"
+2d_physics/layer_3="blue"
 
 [physics]
 
