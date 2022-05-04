@@ -1,28 +1,41 @@
 extends KinematicBody2D
 
 
+onready var comp_color_detect : Area2D = $comp_color_detect
+
 var velocity = Vector2()
 var dir = Vector2()
 var up_dir = Vector2.UP
-var gravity = 200.0
-var jump_speed = 200.0
+export var gravity = 200.0
+export var jump_speed = 220.0
+export var acceleration = 200.0
+export var floor_friction = 40.0
 var jump = false
 var change = false
-var acceleration = 200.0
-var floor_friction = 40.0
+
+const _RED = 1<<0
+const _GREEN = 1<<1
+const _BLUE = 1<<2
+const _WHITE = (1<<3)-1
 enum COLOR {
-	RED = 1<<0,
-	GREEN = 1<<1,
-	BLUE = 1<<2
+	RED = _RED,
+	GREEN = _GREEN,
+	BLUE = _BLUE,
+	
+	CYAN = _WHITE - _RED,
+	MAGENTA = _WHITE - _GREEN,
+	YELLOW = _WHITE - _BLUE
 }
 
 onready var COLORS_BEHAVIOUR = {
-	COLOR.GREEN: ColorBehavior.new(Vector2.UP, COLOR.GREEN),
-	COLOR.RED: ColorBehavior.new(Vector2.RIGHT, COLOR.RED),
-	COLOR.BLUE: ColorBehavior.new(Vector2.DOWN, COLOR.BLUE),
-	
+	COLOR.GREEN: ColorBehavior.new(Vector2.UP, COLOR.GREEN, Color.green),
+	COLOR.RED: ColorBehavior.new(Vector2.RIGHT, COLOR.RED, Color.red),
+	COLOR.BLUE: ColorBehavior.new(Vector2.DOWN, COLOR.BLUE, Color.blue)
 }
 
+
+func _ready():
+	self.color = color
 
 export (COLOR) var color = COLOR.GREEN setget set_color
 
@@ -30,6 +43,9 @@ export (COLOR) var color = COLOR.GREEN setget set_color
 
 func set_color(val):
 	color = val
+	collision_mask = color
+	comp_color_detect.collision_mask = color
+	modulate = COLORS_BEHAVIOUR[color].color
 	
 
 func _physics_process(delta):
@@ -71,10 +87,13 @@ func _physics_process(delta):
 	
 	#changeColors
 	if change:
-#			changeColorFromBackground(this, gameState.static_grid)
+		change_color_from_background()
+		change = false
 		pass
 
-
+func change_color_from_background():
+	for area in comp_color_detect.get_overlapping_areas():
+		self.color = area.change_color(color)
 
 func _input(event):
 	if event.is_action_pressed("jump"):
@@ -83,12 +102,17 @@ func _input(event):
 		jump = false
 	if event.is_action_pressed("transform"):
 		change = true
-
+	if event.is_action_released("transform"):
+		change = false
+	if event.is_action_released("restart"):
+		get_tree().reload_current_scene()
 
 class ColorBehavior:
 	var up_dir := Vector2()
 	var col_layer := 0
+	var color := Color()
 	
-	func _init(up_dir: Vector2, col_layer: int):
+	func _init(up_dir: Vector2, col_layer: int, color: Color):
 		self.up_dir = up_dir
 		self.col_layer = col_layer
+		self.color = color
