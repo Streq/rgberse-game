@@ -69,6 +69,7 @@ config/icon="res://assets/texture/icon.png"
 [autoload]
 
 Levels="*res://src/global/levels.tscn"
+HUD="*res://src/global/HUD/HUD.tscn"
 
 [input]
 

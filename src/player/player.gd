@@ -1,5 +1,6 @@
 extends KinematicBody2D
 
+signal can_change(val)
 
 onready var comp_color_detect : Area2D = $comp_color_detect
 
@@ -12,6 +13,8 @@ export var acceleration = 32.0*10.0
 export var floor_friction = 32.0*2.0
 var jump = false
 var change = false
+var can_change = false setget set_can_change
+
 
 const _RED = 1<<0
 const _GREEN = 1<<1
@@ -36,6 +39,8 @@ onready var COLORS_BEHAVIOUR = {
 
 func _ready():
 	self.color = color
+	connect("can_change",HUD.get_child(0),"set_visible")
+	emit_signal("can_change", false)
 
 export (COLOR) var color = COLOR.GREEN setget set_color
 
@@ -86,10 +91,15 @@ func _physics_process(delta):
 			velocity.y = Math.approach(velocity.y, 0, abs(cb.up_dir.x * floor_friction * delta))
 	
 	#changeColors
-	if change:
+	self.can_change = comp_color_detect.get_overlapping_areas().size()>0
+	if can_change and change:
 		change_color_from_background()
 		change = false
-		pass
+
+func set_can_change(val):
+	if val != can_change:
+		can_change = val
+		emit_signal("can_change", val)
 
 func change_color_from_background():
 	for area in comp_color_detect.get_overlapping_areas():
@@ -116,3 +126,4 @@ class ColorBehavior:
 		self.up_dir = up_dir
 		self.col_layer = col_layer
 		self.color = color
+
