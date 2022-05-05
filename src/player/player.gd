@@ -6,10 +6,10 @@ onready var comp_color_detect : Area2D = $comp_color_detect
 var velocity = Vector2()
 var dir = Vector2()
 var up_dir = Vector2.UP
-export var gravity = 200.0
-export var jump_speed = 220.0
-export var acceleration = 200.0
-export var floor_friction = 40.0
+export var gravity = 32.0*5.0
+export var jump_speed = 32.0*5.0
+export var acceleration = 32.0*10.0
+export var floor_friction = 32.0*2.0
 var jump = false
 var change = false
 

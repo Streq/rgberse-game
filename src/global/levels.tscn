@@ -1,0 +1,37 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://src/global/level.gd" type="Script" id=1]
+[ext_resource path="res://src/global/levels.gd" type="Script" id=2]
+[ext_resource path="res://src/levels/level0.tscn" type="PackedScene" id=3]
+[ext_resource path="res://src/levels/level1.tscn" type="PackedScene" id=4]
+[ext_resource path="res://src/levels/3.tscn" type="PackedScene" id=5]
+[ext_resource path="res://src/levels/tuto.tscn" type="PackedScene" id=6]
+[ext_resource path="res://src/levels/red_tuto.tscn" type="PackedScene" id=7]
+[ext_resource path="res://src/levels/end.tscn" type="PackedScene" id=8]
+
+[node name="levels" type="Node"]
+script = ExtResource( 2 )
+
+[node name="3" type="Node" parent="."]
+script = ExtResource( 1 )
+scene = ExtResource( 6 )
+
+[node name="4" type="Node" parent="."]
+script = ExtResource( 1 )
+scene = ExtResource( 7 )
+
+[node name="1" type="Node" parent="."]
+script = ExtResource( 1 )
+scene = ExtResource( 5 )
+
+[node name="0" type="Node" parent="."]
+script = ExtResource( 1 )
+scene = ExtResource( 3 )
+
+[node name="2" type="Node" parent="."]
+script = ExtResource( 1 )
+scene = ExtResource( 4 )
+
+[node name="5" type="Node" parent="."]
+script = ExtResource( 1 )
+scene = ExtResource( 8 )
